@@ -1,0 +1,37 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2026-01-27 17:22:46.883142",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [
+  {
+   "fieldname": "name1",
+   "fieldtype": "Link",
+   "label": "BOM Plan",
+   "mandatory": 1,
+   "options": "BOM Plan",
+   "wildcard_filter": 0
+  }
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": null,
+ "modified": "2026-01-27 17:29:35.137531",
+ "modified_by": "Administrator",
+ "module": "SC App New",
+ "name": "BOM Production Plan",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "BOM Plan",
+ "report_name": "BOM Production Plan",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
+ "timeout": 0
+}
