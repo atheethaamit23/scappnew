@@ -8,6 +8,7 @@
  "doctype": "Report",
  "filters": [
   {
+   "default": "m7jiv3j74n",
    "fieldname": "name1",
    "fieldtype": "Link",
    "label": "BOM Plan",
@@ -19,7 +20,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": null,
- "modified": "2026-01-27 17:29:35.137531",
+ "modified": "2026-01-28 13:59:13.513353",
  "modified_by": "Administrator",
  "module": "SC App New",
  "name": "BOM Production Plan",

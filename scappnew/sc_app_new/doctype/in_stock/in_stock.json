@@ -1,0 +1,114 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2026-02-06 21:22:34.987055",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "section_break_rh6i",
+    "dc_number",
+    "stock_date",
+    "stock_entry_id",
+    "item_code",
+    "item_name",
+    "received_qty",
+    "balance_qty",
+    "status"
+  ],
+  "fields": [
+    {
+      "fieldname": "section_break_rh6i",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "dc_number",
+      "fieldtype": "Data",
+      "label": "DC Number",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "stock_date",
+      "fieldtype": "Date",
+      "label": "Stock Date",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "stock_entry_id",
+      "fieldtype": "Link",
+      "label": "Stock Entry ID",
+      "options": "Stock Entry",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "item_code",
+      "fieldtype": "Link",
+      "label": "Item Code",
+      "options": "Item",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "item_name",
+      "fieldtype": "Data",
+      "label": "Item Name",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "received_qty",
+      "fieldtype": "Float",
+      "label": "Received Quantity",
+      "reqd": 1,
+      "default": 0,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "balance_qty",
+      "fieldtype": "Float",
+      "label": "Balance Quantity",
+      "reqd": 1,
+      "default": 0,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Open\nClosed",
+      "default": "Open",
+      "reqd": 1,
+      "in_list_view": 1
+    }
+  ],
+  "grid_page_length": 50,
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-02-06 21:22:34.987055",
+  "modified_by": "Administrator",
+  "module": "SC App New",
+  "name": "In Stock",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "row_format": "Dynamic",
+  "rows_threshold_for_grid_search": 20,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}
+
