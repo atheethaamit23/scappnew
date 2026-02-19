@@ -41,7 +41,7 @@ def create_out_stock_entries(delivery_note):
                     'dc_number': dn.name,
                     'stock_date': dn.posting_date,
                     'invoiced_qty': total_qty,
-                    'consumed_qty': 0,
+                    'consumed_qty': total_qty,
                     'balance_qty': total_qty,
                     'status': 'Open'
                 }))
