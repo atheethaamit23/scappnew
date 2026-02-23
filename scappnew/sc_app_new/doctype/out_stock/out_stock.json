@@ -9,6 +9,7 @@
   "item_code",
   "item_name",
   "model",
+  "dn_number",
   "dc_number",
   "stock_date",
   "invoiced_qty",
@@ -42,14 +43,6 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Model"
-  },
-  {
-   "fieldname": "dc_number",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "DC Number",
-   "options": "Delivery Note",
-   "reqd": 1
   },
   {
    "fieldname": "stock_date",
@@ -92,12 +85,25 @@
    "in_list_view": 1,
    "label": "Shortage Qty",
    "read_only": 1
+  },
+  {
+   "fieldname": "dn_number",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "DN Number",
+   "options": "Delivery Note",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dc_number",
+   "fieldtype": "Data",
+   "label": "DC Number"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-07 18:19:54.795172",
+ "modified": "2026-02-21 20:25:12.240918",
  "modified_by": "Administrator",
  "module": "SC App New",
  "name": "Out Stock",
