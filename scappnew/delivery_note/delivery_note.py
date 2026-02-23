@@ -36,7 +36,7 @@ def add_to_out_stock_entries(delivery_note):
         for bi in bom_items:
             required_qty = bi["required_qty"]
 
-            # ---------------- DUPLICATE CHECK (GLOBAL FOR ITEM + DN) ----------------
+            # ---------------- DUPLICATE CHECK ----------------
             duplicate_exists = frappe.db.exists(
                 "Out Stock",
                 {
@@ -51,7 +51,7 @@ def add_to_out_stock_entries(delivery_note):
                     f"<b>{bi['item_code']}</b> against Delivery Note "
                     f"<b>{dn.name}</b>."
                 )
-                continue  # ❌ Skip entire item completely
+                continue
 
             # ---------------- GET ALL OPEN STOCK ----------------
             in_stocks = frappe.get_all(
@@ -63,7 +63,6 @@ def add_to_out_stock_entries(delivery_note):
 
             total_available = sum(d.balance_qty for d in in_stocks) if in_stocks else 0
 
-            # ❌ Not enough stock → skip item
             if total_available < required_qty:
                 frappe.msgprint(
                     f"<b>Not enough balance</b> for Item <b>{bi['item_code']}</b>.<br>"
@@ -87,7 +86,6 @@ def add_to_out_stock_entries(delivery_note):
                 if available_qty <= 0:
                     continue
 
-                # ---------------- CONSUME STOCK ----------------
                 consumed_qty = min(available_qty, remaining_required)
                 new_balance = available_qty - consumed_qty
                 remaining_required -= consumed_qty
@@ -99,8 +97,15 @@ def add_to_out_stock_entries(delivery_note):
                     "item_name": bi["item_name"],
                     "model": item.item_code,
                     "dn_number": dn.name,
+
+                    # ✅ Invoice Number from Delivery Note
+                    "dn_invoice_number": dn.custom_invoice_number,
+
                     "dc_number": in_stock.dc_number,
-                    "stock_date": dn.posting_date,
+
+                    # ✅ Stock Date from In Stock
+                    "stock_date": in_stock.stock_date,
+
                     "invoiced_qty": required_qty,
                     "consumed_qty": consumed_qty,
                     "balance_qty": new_balance,
@@ -130,7 +135,14 @@ def get_raw_material_usage(delivery_note):
     out_stock_entries = frappe.get_all(
         "Out Stock",
         filters={"dn_number": delivery_note},
-        fields=["item_code", "item_name", "dc_number", "consumed_qty", "stock_date"],
+        fields=[
+            "item_code",
+            "item_name",
+            "dc_number",
+            "consumed_qty",
+            "stock_date",
+            "dn_invoice_number"
+        ],
         order_by="dc_number asc, item_code asc"
     )
 
@@ -141,7 +153,8 @@ def get_raw_material_usage(delivery_note):
             "item_name": entry.item_name,
             "dc_number": entry.dc_number,
             "consumed_qty": entry.consumed_qty,
-            "stock_date": entry.stock_date
+            "stock_date": entry.stock_date,
+            "dn_invoice_number": entry.dn_invoice_number
         })
 
     return usage_data

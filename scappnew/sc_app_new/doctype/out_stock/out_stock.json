@@ -11,13 +11,14 @@
   "model",
   "dn_number",
   "dc_number",
+  "dn_invoice_number",
   "stock_date",
   "invoiced_qty",
   "consumed_qty",
   "balance_qty",
   "shortage_qty",
   "status"
- ],
+],
  "fields": [
   {
    "fieldname": "section_break_wlax",
@@ -86,6 +87,13 @@
    "label": "Shortage Qty",
    "read_only": 1
   },
+  {
+  "fieldname": "dn_invoice_number",
+  "fieldtype": "Data",
+  "in_list_view": 1,
+  "reqd": 1,
+  "label": "Invoice Number"
+},
   {
    "fieldname": "dn_number",
    "fieldtype": "Link",
