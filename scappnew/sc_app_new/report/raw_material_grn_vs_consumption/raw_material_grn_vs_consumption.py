@@ -48,7 +48,7 @@ def get_data(filters):
 
     for ins in in_stock_entries:
 
-        # Main GRN Row
+        # Main In Stock Row
         data.append({
             "dc_number": ins.dc_number,
             "stock_date": ins.stock_date,
@@ -57,29 +57,31 @@ def get_data(filters):
         })
 
         # Matching Out Stock rows
-        out_stock_entries = frappe.get_all(
-            "Out Stock",
-            filters={
-                "dc_number": ins.dc_number,
-                "item_code": ins.item_code
-            },
-            fields=[
-                "model",
-                "dn_number",
-                "stock_date",
-                "dc_number",
-                "invoiced_qty",
-                "consumed_qty",
-                "balance_qty"
-            ],
-            order_by="stock_date asc"
-        )
+        out_stock_entries = frappe.db.sql("""
+            SELECT 
+                os.model,
+                os.dn_number,
+                os.stock_date,
+                os.dc_number,
+                os.invoiced_qty,
+                os.consumed_qty,
+                os.balance_qty,
+                dn.posting_date,
+                dn.posting_time,
+                os.name as os_name
+            FROM `tabOut Stock` os
+            LEFT JOIN `tabDelivery Note` dn
+                ON os.dn_number = dn.name
+            WHERE 
+                os.dc_number = %s
+                AND os.item_code = %s
+            ORDER BY dn.posting_date ASC, dn.posting_time ASC, os.balance_qty DESC, os.name ASC
+        """, (ins.dc_number, ins.item_code), as_dict=True)
 
         total_consumed = 0
 
         for outs in out_stock_entries:
             total_consumed += outs.consumed_qty or 0
-
             data.append({
                 "model": outs.model,
                 "dn_number": outs.dn_number,
@@ -90,12 +92,10 @@ def get_data(filters):
                 "balance_qty": outs.balance_qty
             })
 
-        # Total Row
+        # Total Row immediately after this item
         data.append({
             "dn_number": "Total =",
             "consumed_qty": total_consumed
         })
 
     return data
-    
-

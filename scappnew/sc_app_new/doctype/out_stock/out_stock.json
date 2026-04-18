@@ -5,19 +5,21 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_wlax",
-  "item_code",
-  "item_name",
-  "model",
-  "dn_number",
-  "dc_number",
-  "dn_invoice_number",
-  "stock_date",
-  "invoiced_qty",
-  "consumed_qty",
-  "balance_qty",
-  "shortage_qty",
-  "status"
+ "section_break_wlax",
+ "item_code",
+ "item_name",
+ "model",
+ "dn_number",
+ "dn_date",
+ "dc_number",
+ "dn_invoice_number",
+ "invoice_date",
+ "stock_date",
+ "invoiced_qty",
+ "consumed_qty",
+ "balance_qty",
+ "shortage_qty",
+ "status"
 ],
  "fields": [
   {
@@ -88,11 +90,17 @@
    "read_only": 1
   },
   {
-  "fieldname": "dn_invoice_number",
-  "fieldtype": "Data",
-  "in_list_view": 1,
-  "reqd": 1,
-  "label": "Invoice Number"
+   "fieldname": "dn_invoice_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Invoice Number",
+   "reqd": 1
+  },
+  {
+ "fieldname": "invoice_date",
+ "fieldtype": "Date",
+ "in_list_view": 1,
+ "label": "Invoice Date"
 },
   {
    "fieldname": "dn_number",
@@ -103,6 +111,12 @@
    "reqd": 1
   },
   {
+ "fieldname": "dn_date",
+ "fieldtype": "Datetime",
+ "in_list_view": 1,
+ "label": "DN Date"
+},
+  {
    "fieldname": "dc_number",
    "fieldtype": "Data",
    "label": "DC Number"
@@ -111,7 +125,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-21 20:25:12.240918",
+ "modified": "2026-03-06 08:34:52.114114",
  "modified_by": "Administrator",
  "module": "SC App New",
  "name": "Out Stock",

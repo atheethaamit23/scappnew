@@ -4,17 +4,26 @@
   "creation": "2026-02-06 21:22:34.987055",
   "doctype": "DocType",
   "engine": "InnoDB",
+
+  "module": "SC App New",
+  "name": "In Stock",
+
+  "title_field": "dc_number",
+  "search_fields": "dc_number,item_name",
+
   "field_order": [
     "section_break_rh6i",
     "dc_number",
     "stock_date",
     "stock_entry_id",
+     "customer",
     "item_code",
     "item_name",
     "received_qty",
     "balance_qty",
     "status"
   ],
+
   "fields": [
     {
       "fieldname": "section_break_rh6i",
@@ -34,6 +43,14 @@
       "reqd": 1,
       "in_list_view": 1
     },
+    {
+  "fieldname": "customer",
+  "fieldtype": "Link",
+  "label": "Customer",
+  "options": "Customer",
+  "reqd": 0,
+  "in_list_view": 1
+},
     {
       "fieldname": "stock_entry_id",
       "fieldtype": "Link",
@@ -83,31 +100,22 @@
       "in_list_view": 1
     }
   ],
-  "grid_page_length": 50,
-  "index_web_pages_for_search": 1,
-  "links": [],
-  "modified": "2026-02-06 21:22:34.987055",
-  "modified_by": "Administrator",
-  "module": "SC App New",
-  "name": "In Stock",
-  "owner": "Administrator",
+
   "permissions": [
     {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
       "create": 1,
       "delete": 1,
-      "email": 1,
+      "report": 1,
       "export": 1,
       "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "System Manager",
-      "share": 1,
-      "write": 1
+      "email": 1,
+      "share": 1
     }
   ],
-  "row_format": "Dynamic",
-  "rows_threshold_for_grid_search": 20,
+
   "sort_field": "modified",
-  "sort_order": "DESC",
-  "states": []
+  "sort_order": "DESC"
 }

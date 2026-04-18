@@ -3,25 +3,24 @@ frappe.query_reports["Raw Material GRN vs Consumption"] = {
         {
             "fieldname": "dc_number",
             "label": "DC Number",
-            "fieldtype": "Select",
-            "reqd": 1,
-            "options": "\n",  // blank as first option
+            "fieldtype": "Autocomplete",  // <-- changed from Select
+            "options": [],  // will populate dynamically
+            "reqd": 1
         }
     ],
+
     onload: function(report) {
-        // fetch unique dc_number from In Stock
+        // fetch unique DC numbers from In Stock
         frappe.db.get_list('In Stock', {
             fields: ['dc_number'],
             limit_page_length: 1000
         }).then(r => {
             if (r && r.length) {
                 // get unique DC numbers
-                let unique_dc = [...new Set(r.map(d => d.dc_number))];
-                // add blank option at start
-                unique_dc.unshift("");  
+                let unique_dc = [...new Set(r.map(d => d.dc_number).filter(Boolean))];
                 // set options for filter dropdown
                 let filter = report.get_filter('dc_number');
-                filter.df.options = unique_dc.join('\n'); // newline separated
+                filter.df.options = unique_dc; // array, not joined string
                 filter.refresh();
             }
         });

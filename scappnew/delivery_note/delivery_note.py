@@ -1,9 +1,14 @@
 import frappe
-from collections import defaultdict
+from frappe.utils import get_datetime
 
 @frappe.whitelist()
 def add_to_out_stock_entries(delivery_note):
+
     dn = frappe.get_doc("Delivery Note", delivery_note)
+
+    # ✅ Combine Posting Date + Posting Time into exact datetime
+    dn_datetime = get_datetime(f"{dn.posting_date} {dn.posting_time}")
+
     created = 0
 
     for item in dn.items:
@@ -34,6 +39,7 @@ def add_to_out_stock_entries(delivery_note):
 
         # ---------------- PROCESS RAW MATERIALS ----------------
         for bi in bom_items:
+
             required_qty = bi["required_qty"]
 
             # ---------------- DUPLICATE CHECK ----------------
@@ -41,33 +47,46 @@ def add_to_out_stock_entries(delivery_note):
                 "Out Stock",
                 {
                     "item_code": bi["item_code"],
-                    "dn_number": dn.name
+                    "dn_number": dn.name,
+                    "model": item.item_code
                 }
             )
 
             if duplicate_exists:
                 frappe.msgprint(
-                    f"<b>Out Stock already exists</b> for Item "
-                    f"<b>{bi['item_code']}</b> against Delivery Note "
-                    f"<b>{dn.name}</b>."
+                    f"<b>Out Stock already exists</b><br>"
+                    f"Raw Material: <b>{bi['item_code']}</b><br>"
+                    f"Model: <b>{item.item_code}</b><br>"
+                    f"Delivery Note: <b>{dn.name}</b>"
                 )
                 continue
 
-            # ---------------- GET ALL OPEN STOCK ----------------
+            # ---------------- GET ALL OPEN STOCK (WITH DATETIME VALIDATION) ----------------
             in_stocks = frappe.get_all(
                 "In Stock",
-                filters={"item_code": bi["item_code"], "status": "Open"},
+                filters={
+                    "item_code": bi["item_code"],
+                    "status": "Open",
+                    "stock_date": ["<=", dn_datetime]   # ✅ Proper datetime comparison
+                },
                 fields=["name", "balance_qty", "dc_number", "stock_date"],
                 order_by="stock_date asc"
             )
+
+            if not in_stocks:
+                frappe.msgprint(
+                    f"<b>No valid stock found</b> for Item <b>{bi['item_code']}</b><br>"
+                    f"No 'In Stock' entries exist before {dn_datetime}."
+                )
+                continue
 
             total_available = sum(d.balance_qty for d in in_stocks) if in_stocks else 0
 
             if total_available < required_qty:
                 frappe.msgprint(
-                    f"<b>Not enough balance</b> for Item <b>{bi['item_code']}</b>.<br>"
+                    f"<b>Not enough balance</b> for Item <b>{bi['item_code']}</b><br>"
                     f"Required: {required_qty}<br>"
-                    f"Available: {total_available}.<br>"
+                    f"Available: {total_available}<br>"
                     "Cannot create Out Stock."
                 )
                 continue
@@ -97,21 +116,18 @@ def add_to_out_stock_entries(delivery_note):
                     "item_name": bi["item_name"],
                     "model": item.item_code,
                     "dn_number": dn.name,
-
-                    # ✅ Invoice Number from Delivery Note
-                    "dn_invoice_number": dn.custom_invoice_number,
-
+                    "dn_date": dn_datetime,
+                    "dn_invoice_number": dn.custom_invoice_number or dn.name,
+                    "invoice_date": item.custom_invoice_date,
                     "dc_number": in_stock.dc_number,
-
-                    # ✅ Stock Date from In Stock
                     "stock_date": in_stock.stock_date,
-
                     "invoiced_qty": required_qty,
                     "consumed_qty": consumed_qty,
                     "balance_qty": new_balance,
                     "shortage_qty": 0,
                     "status": "Open"
                 })
+
                 out_stock.insert(ignore_permissions=True)
                 created += 1
 
@@ -128,8 +144,8 @@ def add_to_out_stock_entries(delivery_note):
         frappe.msgprint("No Out Stock entries created.")
 
     return True
-
-
+    
+    
 @frappe.whitelist()
 def get_raw_material_usage(delivery_note):
     out_stock_entries = frappe.get_all(
